@@ -1,0 +1,69 @@
+/* --- Pagination UI Fixes --- */
+.pagination, .admin-table .pagination, .page-link, .page-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.pagination {
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+.page-item {
+    margin: 0 2px;
+}
+.page-link {
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    color: #4f46e5;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+.page-link:hover, .page-item.active .page-link {
+    background: #4f46e5;
+    color: #fff;
+    border-color: #4f46e5;
+}
+.page-item.disabled .page-link {
+    color: #b0b0b0;
+    background: #f3f4f6;
+    border-color: #e5e7eb;
+    cursor: not-allowed;
+}
+.pagination .bi-chevron-left, .pagination .bi-chevron-right, .pagination .bi-arrow-left, .pagination .bi-arrow-right {
+    font-size: 1.2rem;
+    vertical-align: middle;
+}
+@media (max-width: 600px) {
+    .pagination, .admin-table .pagination {
+        flex-wrap: wrap;
+        gap: 0.1rem;
+    }
+    .page-link {
+        width: 28px;
+        height: 28px;
+        font-size: 0.95rem;
+    }
+}
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}

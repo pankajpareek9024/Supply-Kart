@@ -1,0 +1,8 @@
+span.position-absolute.translate-middle.badge.rounded-pill.cart-badge {
+    top: 4px;
+    right: -14px;
+}
+
+.navbar {
+    padding: 12px 0px;
+}

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+    <rect width="400" height="400" fill="#f0fdf4" />
+    <circle cx="200" cy="200" r="100" fill="#bbf7d0" />
+    <path d="M160 160h80v80h-80z" fill="#059669" />
+    <text x="200" y="320" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#047857" text-anchor="middle">Category</text>
+</svg>
