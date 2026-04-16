@@ -24,6 +24,29 @@ class DeliveryBoyController extends Controller
         return view('admin.delivery_boys.index', compact('deliveryBoys'));
     }
 
+    public function show(DeliveryBoy $deliveryBoy)
+    {
+        $today = now()->startOfDay();
+
+        $stats = [
+            'today_orders' => $deliveryBoy->orders()->whereDate('created_at', clone $today)->count(),
+            'today_collection' => $deliveryBoy->orders()
+                ->whereDate('delivered_at', clone $today)
+                ->where('payment_method', 'cod')
+                ->where('payment_status', 'paid')
+                ->sum('total_amount'),
+            'total_orders' => $deliveryBoy->orders()->count(),
+            'total_collection' => $deliveryBoy->orders()
+                ->where('payment_method', 'cod')
+                ->where('payment_status', 'paid')
+                ->sum('total_amount')
+        ];
+
+        $recentOrders = $deliveryBoy->orders()->with('customer')->latest()->take(10)->get();
+
+        return view('admin.delivery_boys.show', compact('deliveryBoy', 'stats', 'recentOrders'));
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([

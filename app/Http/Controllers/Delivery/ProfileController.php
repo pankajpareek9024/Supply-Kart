@@ -21,13 +21,11 @@ class ProfileController extends Controller
 
         $request->validate([
             'name'     => 'required|string|max:255',
-            'phone'    => 'required|string|unique:delivery_boys,phone,' . $deliveryBoy->id,
             'address'  => 'nullable|string',
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
         $deliveryBoy->name = $request->name;
-        $deliveryBoy->phone = $request->phone;
         $deliveryBoy->address = $request->address;
 
         if ($request->filled('password')) {

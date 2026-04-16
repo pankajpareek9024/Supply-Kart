@@ -23,8 +23,9 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label small fw-bold text-muted">PHONE NUMBER</label>
-                <input type="text" name="phone" class="form-control" value="{{ $deliveryBoy->phone }}" required>
+                <label class="form-label small fw-bold text-muted">PHONE NUMBER <i class="bi bi-lock-fill text-danger ms-1"></i></label>
+                <input type="text" name="phone" class="form-control bg-light" value="{{ $deliveryBoy->phone }}" readonly>
+                <small class="text-danger d-block mt-1"><i class="bi bi-info-circle me-1"></i>Contact Super Admin to update your mobile number.</small>
             </div>
 
             <div class="mb-3">

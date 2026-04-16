@@ -82,10 +82,12 @@
                             @endif
                         </td>
                         <td>
-                            @if($product->stock > 0)
-                                <span class="status-badge success">{{ $product->stock }} In Stock</span>
-                            @else
+                            @if($product->stock <= 0)
                                 <span class="status-badge danger">Out of Stock</span>
+                            @elseif($product->stock <= $product->low_stock_threshold)
+                                <span class="status-badge warning">{{ $product->stock }} Low Stock</span>
+                            @else
+                                <span class="status-badge success">{{ $product->stock }} In Stock</span>
                             @endif
                         </td>
                         <td>

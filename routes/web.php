@@ -30,6 +30,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/products', [ProductController::class, 'index'])->name('products.list');
 Route::get('/categories', [ProductController::class, 'categories'])->name('categories.index');
 Route::get('/search/live', [ProductController::class, 'liveSearch'])->name('search.live');
+Route::get('/ajax/category/{id}/products', [ProductController::class, 'ajaxCategoryProducts'])->name('ajax.category.products');
 Route::get('/products/{slug}', [ProductController::class, 'details'])->name('products.details');
 Route::get('/category/{slug}', [ProductController::class, 'categoryProducts'])->name('category.products');
 
@@ -74,6 +75,7 @@ Route::middleware('auth:customer')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{id}', [OrderController::class, 'details'])->name('orders.details');
     Route::post('/orders/{id}/review', [\App\Http\Controllers\ReviewController::class, 'store'])->name('orders.review');
+    Route::post('/orders/{id}/reorder', [OrderController::class, 'reorder'])->name('orders.reorder');
     Route::get('/orders/{id}/invoice', [OrderController::class, 'downloadInvoice'])->name('orders.invoice');
 
     // Profile
@@ -106,6 +108,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Dashboard
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard/analytics', [AdminDashboardController::class, 'analytics'])->name('dashboard.analytics');
 
         // Categories
         Route::get('/categories', [AdminCategoryController::class, 'index'])->name('categories.index');
@@ -138,6 +141,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Delivery Boys
         Route::get('/delivery-boys', [AdminDeliveryBoyController::class, 'index'])->name('delivery-boys.index');
+        Route::get('/delivery-boys/{deliveryBoy}', [AdminDeliveryBoyController::class, 'show'])->name('delivery-boys.show')->where('deliveryBoy', '[0-9]+');
         Route::post('/delivery-boys', [AdminDeliveryBoyController::class, 'store'])->name('delivery-boys.store');
         Route::get('/delivery-boys/{deliveryBoy}/edit', [AdminDeliveryBoyController::class, 'edit'])->name('delivery-boys.edit');
         Route::post('/delivery-boys/{deliveryBoy}', [AdminDeliveryBoyController::class, 'update'])->name('delivery-boys.update');

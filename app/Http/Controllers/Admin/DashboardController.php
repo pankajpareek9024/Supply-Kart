@@ -72,10 +72,65 @@ class DashboardController extends Controller
             ];
         });
 
+        $outOfStockProducts = Product::where('stock', '<=', 0)->get();
+        $lowStockProducts = Product::where('stock', '>', 0)->whereColumn('stock', '<=', 'low_stock_threshold')->get();
+
         return view('admin.dashboard', compact(
             'totalOrders', 'totalCustomers', 'totalProducts', 'totalRevenue',
             'recentOrders', 'dailySales', 'monthlyRevenue', 'orderStatusCounts',
-            'deliveryBoySummary'
+            'deliveryBoySummary', 'outOfStockProducts', 'lowStockProducts'
         ));
+    }
+
+    public function analytics(Request $request)
+    {
+        $filter = $request->get('filter', 'monthly'); // daily, 10days, monthly, yearly
+
+        $salesQuery = Order::select(
+            DB::raw('DATE(created_at) as date'),
+            DB::raw('SUM(total_amount) as total')
+        );
+
+        if ($filter == 'daily') {
+            $salesQuery->where('created_at', '>=', Carbon::now()->subDays(1));
+        } elseif ($filter == '10days') {
+            $salesQuery->where('created_at', '>=', Carbon::now()->subDays(10));
+        } elseif ($filter == 'yearly') {
+            $salesQuery->where('created_at', '>=', Carbon::now()->subYears(1));
+        } else { // monthly
+            $salesQuery->where('created_at', '>=', Carbon::now()->subMonths(1));
+        }
+
+        $salesData = $salesQuery->groupBy('date')->orderBy('date')->get();
+
+        $statusData = Order::select('status', DB::raw('COUNT(*) as count'));
+        if ($filter == 'daily') {
+            $statusData->where('created_at', '>=', Carbon::now()->subDays(1));
+        } elseif ($filter == '10days') {
+            $statusData->where('created_at', '>=', Carbon::now()->subDays(10));
+        } elseif ($filter == 'yearly') {
+            $statusData->where('created_at', '>=', Carbon::now()->subYears(1));
+        } else {
+            $statusData->where('created_at', '>=', Carbon::now()->subMonths(1));
+        }
+        $statusCounts = $statusData->groupBy('status')->pluck('count', 'status');
+
+        $revenueQuery = Order::select(
+            DB::raw('YEAR(created_at) as year'),
+            DB::raw('MONTH(created_at) as month'),
+            DB::raw('SUM(total_amount) as total')
+        );
+        if ($filter == 'yearly') {
+            $revenueQuery->where('created_at', '>=', Carbon::now()->subYears(5));
+        } else {
+            $revenueQuery->where('created_at', '>=', Carbon::now()->subMonths(12));
+        }
+        $monthlyRevenue = $revenueQuery->groupBy('year', 'month')->orderBy('year')->orderBy('month')->get();
+
+        return response()->json([
+            'sales' => $salesData,
+            'status' => $statusCounts,
+            'revenue' => $monthlyRevenue
+        ]);
     }
 }

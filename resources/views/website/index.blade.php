@@ -58,7 +58,7 @@
     <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-3">
         @foreach($categories as $category)
         <div class="col">
-            <a href="{{ route('category.products', $category->slug) }}" class="text-decoration-none text-dark">
+            <a href="javascript:void(0)" onclick="loadCategoryProducts({{ $category->id }}, '{{ $category->name }}')" class="text-decoration-none text-dark category-filter-link" data-id="{{ $category->id }}">
                 @include('website.layouts.partials.category-card', [
                     'title' => $category->name, 
                     'image' => $category->image_url
@@ -72,11 +72,11 @@
 <!-- Featured Products -->
 <div class="container mb-5">
     <div class="d-flex justify-content-between align-items-end mb-4">
-        <h4 class="fw-bold mb-0">Featured For You</h4>
+        <h4 class="fw-bold mb-0" id="featured-products-title">Featured For You</h4>
         <a href="{{ route('products.list') }}" class="text-decoration-none text-primary-green fw-medium">View All <i class="fa-solid fa-arrow-right ms-1"></i></a>
     </div>
 
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="products-grid">
         @foreach($featuredProducts as $product)
         <div class="col">
             @php
@@ -148,3 +148,38 @@
 </style>
 
 @endsection
+
+@push('scripts')
+<script>
+    function loadCategoryProducts(categoryId, categoryName) {
+        // Show loading state
+        const grid = document.getElementById('products-grid');
+        const title = document.getElementById('featured-products-title');
+        
+        grid.style.opacity = '0.5';
+        grid.innerHTML = '<div class="col-12 text-center py-5"><div class="spinner-border text-success" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+        
+        // Highlight selected category
+        document.querySelectorAll('.category-filter-link').forEach(link => {
+            link.querySelector('.card').classList.remove('border-success', 'shadow');
+            if(link.getAttribute('data-id') == categoryId) {
+                link.querySelector('.card').classList.add('border-success', 'shadow');
+            }
+        });
+
+        title.innerText = categoryName + ' Products';
+
+        fetch(`/ajax/category/${categoryId}/products`)
+            .then(response => response.json())
+            .then(data => {
+                grid.innerHTML = data.html;
+                grid.style.opacity = '1';
+            })
+            .catch(error => {
+                console.error('Error fetching products:', error);
+                grid.innerHTML = '<div class="col-12 text-center py-4 text-danger"><p>Failed to load products. Please try again later.</p></div>';
+                grid.style.opacity = '1';
+            });
+    }
+</script>
+@endpush

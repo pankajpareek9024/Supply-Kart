@@ -27,7 +27,13 @@ class ProductController extends Controller
 
         // Search
         if ($request->has('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('name', 'like', '%' . $searchTerm . '%')
+                  ->orWhereHas('category', function($q2) use ($searchTerm) {
+                      $q2->where('name', 'like', '%' . $searchTerm . '%');
+                  });
+            });
         }
 
         $products = $query->paginate(12);
@@ -53,11 +59,21 @@ class ProductController extends Controller
             return response()->json([]);
         }
 
-        $products = Product::where('name', 'LIKE', "%{$query}%")
-                            ->where('is_active', true)
-                            ->select('name', 'slug', 'image', 'price')
+        $products = Product::where('is_active', true)
+                            ->where(function($q) use ($query) {
+                                $q->where('name', 'LIKE', "%{$query}%")
+                                  ->orWhereHas('category', function($q2) use ($query) {
+                                      $q2->where('name', 'LIKE', "%{$query}%");
+                                  });
+                            })
+                            ->with('category')
+                            ->select('id', 'name', 'slug', 'image', 'price', 'category_id', 'mrp')
                             ->take(5)
-                            ->get();
+                            ->get()
+                            ->map(function($product) {
+                                $product->image_url = $product->image_url;
+                                return $product;
+                            });
 
         return response()->json($products);
     }
@@ -77,5 +93,36 @@ class ProductController extends Controller
         $categories = Category::where('is_active', true)->get();
 
         return view('website.products.list', compact('products', 'categories', 'category'));
+    }
+
+    public function ajaxCategoryProducts($id)
+    {
+        $products = Product::where('category_id', $id)->where('is_active', true)->take(8)->get();
+        // Return rendered blade partial
+        $html = '';
+        foreach($products as $product) {
+            $discount = $product->mrp > $product->price ? round((($product->mrp - $product->price) / $product->mrp) * 100) : 0;
+            $html .= '<div class="col">';
+            $html .= view('website.layouts.partials.product-card', [
+                'id' => $product->id,
+                'slug' => $product->slug,
+                'title' => $product->name,
+                'price' => $product->price,
+                'originalPrice' => $product->mrp,
+                'margin' => $discount,
+                'discount' => $discount,
+                'category' => $product->category->name ?? 'General',
+                'image' => $product->image_url,
+                'stock' => $product->stock,
+                'description' => $product->description
+            ])->render();
+            $html .= '</div>';
+        }
+        
+        if ($products->isEmpty()) {
+            $html = '<div class="col-12 text-center text-muted py-4"><p>No products found in this category.</p></div>';
+        }
+
+        return response()->json(['html' => $html]);
     }
 }

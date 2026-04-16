@@ -58,6 +58,19 @@ class OrderController extends Controller
             if ($order->payment_method === 'cod') {
                 $order->cash_collected = true;
             }
+        } elseif ($status === 'cancelled') {
+            if ($order->status !== 'cancelled') {
+                foreach ($order->items as $item) {
+                    if ($item->product) {
+                        $item->product->increment('stock', $item->quantity);
+                    }
+                }
+            }
+            if ($order->payment_status === 'paid') {
+                $order->payment_status = 'refunded';
+            } else {
+                $order->payment_status = 'failed';
+            }
         }
 
         $order->save();

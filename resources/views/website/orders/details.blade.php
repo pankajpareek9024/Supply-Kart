@@ -86,7 +86,7 @@
                                     <td class="py-4 px-4">
                                         <div class="d-flex align-items-center">
                                             <div class="bg-light rounded p-2 me-3 flex-shrink-0" style="width: 60px; height: 60px;">
-                                                <img src="{{ asset($item->product->image ?? 'images/default-product.svg') }}" class="img-fluid h-100 object-fit-contain mix-blend-multiply" alt="{{ $item->product->name }}">
+                                                <img src="{{ $item->product->image_url }}" class="img-fluid h-100 object-fit-contain mix-blend-multiply" alt="{{ $item->product->name }}">
                                             </div>
                                             <div>
                                                 <h6 class="fw-bold mb-0 text-dark">{{ $item->product->name }}</h6>
@@ -118,9 +118,15 @@
                         <h5 class="fw-bolder mb-0 text-dark">Total Paid</h5>
                         <h4 class="fw-bolder mb-0 text-success">₹{{ number_format($order->total_amount, 2) }}</h4>
                     </div>
-                    <div class="mt-4 text-end">
+                    <div class="mt-4 text-end d-flex gap-2 justify-content-end">
+                        <form action="{{ route('orders.reorder', $order->id) }}" method="POST" class="d-inline reorder-form">
+                            @csrf
+                            <button type="submit" class="btn btn-primary fw-bold rounded-pill px-4">
+                                <i class="fa-solid fa-rotate-right me-2"></i>Reorder Items
+                            </button>
+                        </form>
                         <a href="{{ route('orders.invoice', $order->id) }}" class="btn btn-outline-success fw-bold rounded-pill px-4">
-                            <i class="fa-solid fa-file-invoice-dollar me-2"></i>Download Invoice (PDF)
+                            <i class="fa-solid fa-file-invoice-dollar me-2"></i>Download Invoice
                         </a>
                     </div>
                 </div>
@@ -202,7 +208,7 @@
                                 <div class="mb-3">
                                     <label class="form-label small fw-bold text-muted">RATING</label>
                                     <div class="star-rating d-flex gap-2 fs-4">
-                                        @foreach(range(1, 5) as $i)
+                                        @foreach(range(5, 1) as $i)
                                             <input type="radio" name="rating" value="{{ $i }}" id="star{{ $i }}" class="d-none" {{ $i == 5 ? 'checked' : '' }}>
                                             <label for="star{{ $i }}" class="cursor-pointer text-muted"><i class="fa-solid fa-star"></i></label>
                                         @endforeach
@@ -244,23 +250,28 @@
                             <i class="fa-solid fa-circle-xmark fa-2x text-danger opacity-75 mb-3 d-block"></i>
                             <p class="text-muted mb-0 fw-medium">This order has been cancelled.</p>
                         </div>
-                    @elseif(in_array($order->status, ['out_for_delivery', 'delivered']))
+                    @elseif(in_array($order->status, ['out_for_delivery']))
                         <div class="d-flex align-items-center mb-3 bg-light p-3 rounded-3">
                             <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3 shadow-sm flex-shrink-0" style="width:48px;height:48px;">
                                 <i class="fa-solid fa-person-biking fs-5"></i>
                             </div>
                             <div>
-                                <h6 class="fw-bold text-dark mb-0">{{ $order->delivery_boy_name ?? 'Ravi Kumar' }}</h6>
+                                <h6 class="fw-bold text-dark mb-0">{{ $order->delivery_boy_name ?? 'Delivery Executive' }}</h6>
                                 <small class="text-muted">Delivery Executive</small>
                             </div>
                         </div>
-                        <a href="tel:{{ $order->delivery_boy_phone ?? '+919876543210' }}" class="btn btn-outline-success fw-bold rounded-pill w-100 mb-3">
+                        <a href="tel:{{ $order->delivery_boy_phone ?? '' }}" class="btn btn-outline-success fw-bold rounded-pill w-100 mb-3">
                             <i class="fa-solid fa-phone me-2"></i>Call Executive
                         </a>
                         <div class="rounded-3 overflow-hidden border d-flex align-items-center justify-content-center flex-column" style="height:140px; background: linear-gradient(135deg, #d1fae5, #a7f3d0);">
                             <i class="fa-solid fa-map-location-dot fa-2x text-success mb-2"></i>
                             <p class="text-success fw-bold mb-0 small">Live GPS Tracking Active</p>
-                            <small class="text-muted">~2.5 km away · ETA 8 mins</small>
+                            <small class="text-muted">Tracking live location...</small>
+                        </div>
+                    @elseif($order->status === 'delivered')
+                        <div class="text-center py-2">
+                            <i class="fa-solid fa-check-circle fa-2x text-success opacity-75 mb-3 d-block"></i>
+                            <p class="text-success mb-0 fw-medium">Order Delivered Successfully.</p>
                         </div>
                     @else
                         <div class="text-center py-2">

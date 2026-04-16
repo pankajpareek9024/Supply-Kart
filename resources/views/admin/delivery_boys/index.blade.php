@@ -63,6 +63,9 @@
                         </td>
                         <td>
                             <div class="d-flex gap-1 align-items-center">
+                                <a href="{{ route('admin.delivery-boys.show', $boy) }}" class="btn-action view" title="View Details">
+                                    <i class="bi bi-eye"></i>
+                                </a>
                                 <button class="btn-action edit edit-db-btn"
                                     data-url="{{ route('admin.delivery-boys.edit', $boy) }}"
                                     title="Edit">

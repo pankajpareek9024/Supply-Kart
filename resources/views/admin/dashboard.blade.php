@@ -8,13 +8,21 @@
 @section('content')
 
 {{-- ── Page Header ──────────────────────────────────────────────── --}}
-<div class="page-header">
+<div class="page-header d-flex justify-content-between align-items-center">
     <div>
         <h1 class="page-title">Dashboard</h1>
         <p class="page-subtitle">Welcome back, {{ auth('admin')->user()->name ?? 'Administrator' }}! Here's what's happening today.</p>
     </div>
-    <div class="text-muted" style="font-size:.85rem;">
-        <i class="bi bi-calendar3 me-1"></i>{{ now()->format('d M Y') }}
+    <div class="d-flex align-items-center gap-3">
+        <div class="text-muted" style="font-size:.85rem;">
+            <i class="bi bi-calendar3 me-1"></i>{{ now()->format('d M Y') }}
+        </div>
+        <select id="dashboardFilter" class="form-select form-select-sm" style="width: auto;">
+            <option value="daily">Daily</option>
+            <option value="10days">Last 10 Days</option>
+            <option value="monthly" selected>Monthly</option>
+            <option value="yearly">Yearly</option>
+        </select>
     </div>
 </div>
 
@@ -95,6 +103,50 @@
     </div>
 </div>
 
+{{-- ── Stock Alerts ───────────────────────────────────────────────── --}}
+@if($outOfStockProducts->count() > 0 || $lowStockProducts->count() > 0)
+<div class="row g-3 mb-4">
+    @if($outOfStockProducts->count() > 0)
+    <div class="col-lg-6">
+        <div class="admin-card border-danger h-100">
+            <div class="admin-card-header bg-danger text-white">
+                <h6 class="admin-card-title mb-0 text-white"><i class="bi bi-exclamation-triangle-fill me-2"></i>Out of Stock </h6>
+            </div>
+            <div class="admin-card-body p-0" style="max-height: 250px; overflow-y: auto;">
+                <ul class="list-group list-group-flush">
+                    @foreach($outOfStockProducts as $prod)
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="fw-medium">{{ $prod->name }}</span>
+                            <span class="badge bg-danger rounded-pill px-3">0 Left</span>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    </div>
+    @endif
+    @if($lowStockProducts->count() > 0)
+    <div class="col-lg-6">
+        <div class="admin-card border-warning h-100">
+            <div class="admin-card-header bg-warning text-dark">
+                <h6 class="admin-card-title mb-0 text-dark"><i class="bi bi-exclamation-circle-fill me-2"></i>Low Stock </h6>
+            </div>
+            <div class="admin-card-body p-0" style="max-height: 250px; overflow-y: auto;">
+                <ul class="list-group list-group-flush">
+                    @foreach($lowStockProducts as $prod)
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="fw-medium">{{ $prod->name }}</span>
+                            <span class="badge bg-warning text-dark rounded-pill px-3">{{ $prod->stock }} Left</span>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    </div>
+    @endif
+</div>
+@endif
+
 {{-- ── Recent Orders ─────────────────────────────────────────────── --}}
 <div class="admin-card">
     <div class="admin-card-header">
@@ -117,8 +169,13 @@
                 </thead>
                 <tbody>
                     @forelse($recentOrders as $order)
-                    <tr>
-                        <td><span class="fw-600 text-primary">{{ $order->order_number }}</span></td>
+                    <tr class="{{ $order->status === 'pending' ? 'table-warning' : '' }}">
+                        <td>
+                            <span class="fw-600 text-primary">{{ $order->order_number }}</span>
+                            @if($order->status === 'pending')
+                                <span class="badge bg-danger ms-1 animate__animated animate__pulse animate__infinite">New!</span>
+                            @endif
+                        </td>
                         <td>
                             <div class="fw-600">{{ $order->customer?->shop_name ?? $order->customer?->owner_name ?? 'N/A' }}</div>
                             <small class="text-muted">{{ $order->customer?->mobile ?? '' }}</small>
@@ -231,6 +288,35 @@ new Chart(document.getElementById('monthlyRevenueChart'), {
         plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ₹' + Number(ctx.raw).toLocaleString('en-IN') } } },
         scales : { y: { ticks: { callback: v => '₹' + v.toLocaleString('en-IN') } } }
     }
+});
+
+// -- AJAX Filtering --
+document.getElementById('dashboardFilter').addEventListener('change', function() {
+    const filter = this.val;
+    fetch('{{ route("admin.dashboard.analytics") }}?filter=' + this.value)
+        .then(res => res.json())
+        .then(data => {
+            // Update Sales Chart
+            const salesChart = Chart.getChart('dailySalesChart');
+            salesChart.data.labels = data.sales.map(s => s.date);
+            salesChart.data.datasets[0].data = data.sales.map(s => s.total);
+            salesChart.update();
+
+            // Update Status Chart
+            const statusChart = Chart.getChart('orderStatusChart');
+            statusChart.data.labels = Object.keys(data.status).map(l => l.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()));
+            statusChart.data.datasets[0].data = Object.values(data.status);
+            statusChart.update();
+
+            // Update Revenue Chart
+            const revenueChart = Chart.getChart('monthlyRevenueChart');
+            revenueChart.data.labels = data.revenue.map(d => {
+                const months = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                return months[d.month] + ' ' + String(d.year).slice(2);
+            });
+            revenueChart.data.datasets[0].data = data.revenue.map(d => d.total);
+            revenueChart.update();
+        });
 });
 </script>
 @endpush

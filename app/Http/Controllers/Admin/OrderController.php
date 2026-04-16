@@ -76,6 +76,19 @@ class OrderController extends Controller
             if (!$order->delivery_boy_id && $request->delivery_boy_id) {
                 $order->delivery_boy_id = $request->delivery_boy_id;
             }
+        } elseif ($data['status'] === 'cancelled') {
+            if ($order->status !== 'cancelled') {
+                foreach ($order->items as $item) {
+                    if ($item->product) {
+                        $item->product->increment('stock', $item->quantity);
+                    }
+                }
+            }
+            if ($order->payment_status === 'paid') {
+                $order->payment_status = 'refunded';
+            } else {
+                $order->payment_status = 'failed'; // or cancelled/failed depending on DB enum
+            }
         }
         $order->update($data);
         return response()->json([

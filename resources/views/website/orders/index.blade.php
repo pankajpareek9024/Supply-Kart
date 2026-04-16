@@ -61,6 +61,10 @@
                             <span class="badge {{ $si['class'] }} border px-3 py-2 rounded-pill fw-bold">{{ $si['label'] }}</span>
                         </td>
                         <td class="py-3 px-4 text-end">
+                            <form action="{{ route('orders.reorder', $order->id) }}" method="POST" class="d-inline reorder-form">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-bold me-2">Reorder</button>
+                            </form>
                             <a href="{{ route('orders.details', $order->id) }}" class="btn btn-sm btn-outline-success rounded-pill px-3 fw-bold">View Details</a>
                         </td>
                     </tr>
