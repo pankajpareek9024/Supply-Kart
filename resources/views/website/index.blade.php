@@ -16,7 +16,7 @@
         <div class="carousel-inner rounded-4 shadow-lg overflow-hidden">
             <div class="carousel-item active">
                 <div class="p-5 text-white d-flex flex-column justify-content-center align-items-center position-relative animate__animated animate__fadeIn" style="min-height: 450px; background-image: url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80'); background-size: cover; background-position: center;">
-                    <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark" style="opacity: 0.65; background: linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.4));"></div>
+                    <div style="opacity: 0.65; background: linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.4));"></div>
                     <div class="position-relative z-1 text-center animate__animated animate__fadeInUp animate__delay-1s">
                         <span class="badge bg-primary mb-3 px-3 py-2 rounded-pill fs-6 border border-2 border-light">🚚 Modern Wholesale Platform</span>
                         <h1 class="display-4 fw-bolder mb-3 text-shadow-sm">Grow Your Business<br>with SupplyKart</h1>
