@@ -29,13 +29,8 @@ RUN chown -R www-data:www-data /var/www \
 # Set Apache to serve Laravel public folder
 RUN sed -i 's!/var/www/html!/var/www/public!g' /etc/apache2/sites-available/000-default.conf
 
-# Clear cache (important)
-RUN php artisan config:clear \
-    && php artisan cache:clear \
-    && php artisan route:clear \
-    && php artisan view:clear
-
 # Expose port
 EXPOSE 80
 
-CMD ["apache2-foreground"]
+# ✅ Run artisan AFTER container starts (correct way)
+CMD ["sh", "-c", "php artisan config:clear && php artisan cache:clear && php artisan route:clear && php artisan view:clear && apache2-foreground"]
