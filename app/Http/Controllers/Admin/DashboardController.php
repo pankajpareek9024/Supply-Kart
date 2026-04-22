@@ -84,7 +84,7 @@ class DashboardController extends Controller
 
     public function analytics(Request $request)
     {
-        $filter = $request->get('filter', 'monthly'); // daily, 10days, monthly, yearly
+        $filter = $request->input('filter', 'monthly'); // daily, 10days, monthly, yearly
 
         $salesQuery = Order::select(
             DB::raw('DATE(created_at) as date'),

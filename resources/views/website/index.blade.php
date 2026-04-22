@@ -12,39 +12,36 @@
         </div>
     @endif
 
-    <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
-        <div class="carousel-inner rounded-4 shadow-lg overflow-hidden">
+    <div id="heroCarousel" class="carousel slide carousel-fade mb-md-4 mb-2" data-bs-ride="carousel">
+        <div class="carousel-inner rounded-4 shadow-sm overflow-hidden hero-slider-container">
             <div class="carousel-item active">
-                <div class="p-5 text-white d-flex flex-column justify-content-center align-items-center position-relative animate__animated animate__fadeIn" style="min-height: 450px; background-image: url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80'); background-size: cover; background-position: center;">
-                    <div style="opacity: 0.65; background: linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.4));"></div>
-                    <div class="position-relative z-1 text-center animate__animated animate__fadeInUp animate__delay-1s">
-                        <span class="badge bg-primary mb-3 px-3 py-2 rounded-pill fs-6 border border-2 border-light">🚚 Modern Wholesale Platform</span>
-                        <h1 class="display-4 fw-bolder mb-3 text-shadow-sm">Grow Your Business<br>with SupplyKart</h1>
-                        <p class="fs-5 mb-4 text-light" style="max-width: 600px; margin: 0 auto;">Discover unbeatable prices, curated products, and seamless delivery for your shop. Experience the next-gen B2B marketplace.</p>
-                        <a href="{{ route('products.list') }}" class="btn btn-primary btn-lg fw-bold px-5 py-3 rounded-pill shadow-lg shadow-glow">Start Shopping <i class="fa-solid fa-arrow-right ms-2"></i></a>
+                <div class="p-4 p-md-5 text-white d-flex flex-column justify-content-center align-items-start align-items-md-center position-relative animate__animated animate__fadeIn hero-slide-item" style="background-image: url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80'); background-size: cover; background-position: center;">
+                    <div class="hero-overlay"></div>
+                    <div class="position-relative z-1 animate__animated animate__fadeInUp animate__delay-1s w-100 pe-4 text-md-center container">
+                        <span class="badge bg-primary mb-2 mb-md-3 px-2 px-md-3 py-1 py-md-2 rounded-pill hero-badge">🚀 Fastest Delivery</span>
+                        <h2 class="fw-bolder mb-2 mb-md-3 text-shadow-sm hero-title text-white">Wholesale Delivery<br>in Minutes</h2>
+                        <p class="fs-5 mb-4 text-light d-none d-md-block" style="max-width: 600px; margin: 0 auto;">Discover unbeatable prices, curated products, and seamless delivery for your shop. Experience the next-gen B2B marketplace.</p>
+                        <a href="{{ route('products.list') }}" class="btn btn-sm btn-md-lg btn-primary fw-bold rounded-pill px-3 px-md-5 py-md-3 shadow-lg shadow-glow">Order Now <i class="fa-solid fa-arrow-right ms-1 ms-md-2"></i></a>
                     </div>
                 </div>
             </div>
             <div class="carousel-item">
-                <div class="p-5 text-white d-flex flex-column justify-content-center align-items-center position-relative animate__animated animate__fadeIn" style="min-height: 450px; background-image: url('https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?auto=format&fit=crop&w=1200&q=80'); background-size: cover; background-position: center;">
-                    <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark" style="opacity: 0.65; background: linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0.8));"></div>
-                    <div class="position-relative z-1 text-center animate__animated animate__fadeInUp animate__delay-1s">
-                        <span class="badge bg-warning text-dark mb-3 px-3 py-2 rounded-pill fs-6 border border-2 border-light"><i class="fa-solid fa-bolt text-danger"></i> Fast & Reliable</span>
-                        <h1 class="display-4 fw-bolder mb-3 text-warning text-shadow-sm">Lightning Delivery<br>for Your Store</h1>
-                        <p class="fs-5 mb-4 text-light" style="max-width: 600px; margin: 0 auto;">Never miss a sale. We deliver your inventory on time, every time, with our trusted logistics network.</p>
-                        <a href="{{ route('products.list') }}" class="btn btn-warning btn-lg fw-bold px-5 py-3 rounded-pill shadow-lg">Browse Catalog <i class="fa-solid fa-bolt ms-2"></i></a>
+                <div class="p-4 p-md-5 text-white d-flex flex-column justify-content-center align-items-start align-items-md-center position-relative animate__animated animate__fadeIn hero-slide-item" style="background-image: url('{{ asset('images/hero_banner_2.jpg') }}'); background-size: cover; background-position: center;">
+                    <div class="hero-overlay"></div>
+                    <div class="position-relative z-1 animate__animated animate__fadeInUp animate__delay-1s w-100 pe-4 text-md-center container">
+                        <span class="badge bg-warning text-dark mb-2 mb-md-3 px-2 px-md-3 py-1 py-md-2 rounded-pill hero-badge"><i class="fa-solid fa-tags"></i> Top Margins</span>
+                        <h2 class="fw-bolder mb-2 mb-md-3 text-warning text-shadow-sm hero-title">Best B2B Prices<br>Guaranteed</h2>
+                        <p class="fs-5 mb-4 text-light d-none d-md-block" style="max-width: 600px; margin: 0 auto;">Never miss a sale. We deliver your inventory on time, every time, with our trusted logistics network.</p>
+                        <a href="{{ route('products.list') }}" class="btn btn-sm btn-md-lg btn-warning fw-bold rounded-pill text-dark px-3 px-md-5 py-md-3 shadow-lg">Browse <i class="fa-solid fa-bolt ms-1 ms-md-2"></i></a>
                     </div>
                 </div>
             </div>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon bg-dark p-3 rounded-circle shadow" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon bg-dark p-3 rounded-circle shadow" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
+        <!-- Indicators (Dots instead of arrows for modern look) -->
+        <div class="carousel-indicators mb-2 mb-md-4 p-0">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active rounded-circle bg-white shadow-sm" aria-current="true" aria-label="Slide 1" style="width: 10px; height: 10px;"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" class="rounded-circle bg-white shadow-sm mx-1" aria-label="Slide 2" style="width: 10px; height: 10px;"></button>
+        </div>
     </div>
 </div>
 
@@ -55,9 +52,9 @@
         <a href="{{ route('categories.index') }}" class="text-decoration-none text-primary-green fw-medium">View All Categories <i class="fa-solid fa-arrow-right ms-1"></i></a>
     </div>
     
-    <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-3">
+    <div class="row row-cols-4 row-cols-md-4 row-cols-lg-6 g-3 mobile-scroll-row hide-scrollbar pb-2">
         @foreach($categories as $category)
-        <div class="col">
+        <div class="col mobile-scroll-col px-1 px-md-2">
             <a href="javascript:void(0)" onclick="loadCategoryProducts({{ $category->id }}, '{{ $category->name }}')" class="text-decoration-none text-dark category-filter-link" data-id="{{ $category->id }}">
                 @include('website.layouts.partials.category-card', [
                     'title' => $category->name, 
@@ -76,7 +73,7 @@
         <a href="{{ route('products.list') }}" class="text-decoration-none text-primary-green fw-medium">View All <i class="fa-solid fa-arrow-right ms-1"></i></a>
     </div>
 
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="products-grid">
+    <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2 g-md-4" id="products-grid">
         @foreach($featuredProducts as $product)
         <div class="col">
             @php

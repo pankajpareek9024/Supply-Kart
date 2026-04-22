@@ -57,7 +57,7 @@
                     <h5 class="mb-0 fw-bold">Showing {{ $products->total() }} Products</h5>
                     <small class="text-muted">Delivery in 20 minutes available for selected areas.</small>
                 </div>
-                <div class="d-flex gap-2 bg-light p-1 rounded-pill view-mode-toggle">
+                <div class="d-none d-md-flex gap-2 bg-light p-1 rounded-pill view-mode-toggle">
                     <button class="btn btn-sm btn-white rounded-pill active px-3 shadow-sm" id="btn-grid-view"><i class="fa-solid fa-border-all"></i> Grid</button>
                     <button class="btn btn-sm btn-light border-0 rounded-pill px-3 text-muted" id="btn-list-view"><i class="fa-solid fa-list-ul"></i> List</button>
                 </div>
@@ -71,7 +71,7 @@
                     <a href="{{ route('products.list') }}" class="btn btn-outline-success px-4 rounded-pill">Clear All Filters</a>
                 </div>
             @else
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="product-grid">
+            <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 g-2 g-md-4" id="product-grid">
                 @foreach($products as $product)
                 <div class="col product-col">
                     @php

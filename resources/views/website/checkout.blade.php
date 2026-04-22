@@ -109,7 +109,7 @@
 
         if(paymentMethod === 'online'){
             var options = {
-                "key": "rzp_test_YourMockTestKeyHere", // Replace with your key
+                "key": "{{ config('services.razorpay.key') }}", // Replace with your key
                 "amount": totalAmount,
                 "currency": "INR",
                 "name": "Supply Kart",

@@ -70,11 +70,11 @@ class OrderController extends Controller
         ]);
 
         if ($data['status'] === 'delivered') {
-            $order->payment_status = 'paid';
-            $order->delivered_at = now();
+            $data['payment_status'] = 'paid';
+            $data['delivered_at'] = now();
             // Optionally, set delivery_boy_id if not set
             if (!$order->delivery_boy_id && $request->delivery_boy_id) {
-                $order->delivery_boy_id = $request->delivery_boy_id;
+                $data['delivery_boy_id'] = $request->delivery_boy_id;
             }
         } elseif ($data['status'] === 'cancelled') {
             if ($order->status !== 'cancelled') {
@@ -85,9 +85,9 @@ class OrderController extends Controller
                 }
             }
             if ($order->payment_status === 'paid') {
-                $order->payment_status = 'refunded';
+                $data['payment_status'] = 'refunded';
             } else {
-                $order->payment_status = 'failed'; // or cancelled/failed depending on DB enum
+                $data['payment_status'] = 'failed'; // or cancelled/failed depending on DB enum
             }
         }
         $order->update($data);

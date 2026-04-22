@@ -6,35 +6,36 @@
             Supply <span class="text-primary-orange ms-1">Kart</span>
         </a>
 
-        <!-- Mobile Toggle -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+        <!-- Mobile Toggle (Hidden per mobile-first design) -->
+        <button class="navbar-toggler d-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
             aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Navbar Content -->
-        <div class="collapse navbar-collapse" id="navbarContent">
+        <!-- Search Bar (Moved out of collapse for full-width mobile view) -->
+        <div class="position-relative mx-auto w-100 order-last order-lg-0 mt-3 mt-lg-0 px-lg-4"
+            style="max-width: 500px;">
+            <form class="d-flex search-container w-100" action="{{ route('products.list') }}" method="GET">
+                <input id="live-search-input" name="search" class="form-control focus-ring focus-ring-success"
+                    type="search" placeholder="Search for wholesale products..." aria-label="Search"
+                    value="{{ request('search') }}" autocomplete="off">
+                <button class="btn btn-green px-4" type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
 
-            <!-- Search Bar -->
-            <div class="position-relative mx-auto w-100 my-3 my-lg-0 px-lg-4" style="max-width: 500px;">
-                <form class="d-flex search-container w-100" action="{{ route('products.list') }}" method="GET">
-                    <input id="live-search-input" name="search" class="form-control focus-ring focus-ring-success"
-                        type="search" placeholder="Search for wholesale products..." aria-label="Search"
-                        value="{{ request('search') }}" autocomplete="off">
-                    <button class="btn btn-green px-4" type="submit">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
-                </form>
-
-                <!-- Live Search Results Dropdown -->
-                <div id="live-search-results"
-                    class="position-absolute w-100 bg-white rounded-3 shadow-lg z-3 d-none border mt-1"
-                    style="max-height: 400px; overflow-y: auto; left: 0; right: 0; margin-left: auto; margin-right: auto; width: calc(100% - 3rem);">
-                    <div class="list-group list-group-flush" id="search-results-list">
-                        <!-- Results injected here -->
-                    </div>
+            <!-- Live Search Results Dropdown -->
+            <div id="live-search-results"
+                class="position-absolute w-100 bg-white rounded-3 shadow-lg z-3 d-none border mt-1"
+                style="max-height: 400px; overflow-y: auto; left: 0; right: 0; margin-left: auto; margin-right: auto; width: calc(100% - 3rem);">
+                <div class="list-group list-group-flush" id="search-results-list">
+                    <!-- Results injected here -->
                 </div>
             </div>
+        </div>
+
+        <!-- Navbar Content -->
+        <div class="collapse navbar-collapse w-100 w-lg-auto justify-content-end" id="navbarContent">
 
             <!-- Navigation Links -->
             <ul class="navbar-nav mb-2 mb-lg-0 align-items-center">

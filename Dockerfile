@@ -1,26 +1,20 @@
-FROM php:8.2-fpm
+FROM php:8.2-apache
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    zip \
-    unzip \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    libzip-dev \
-    nginx \
-    supervisor
+    git curl zip unzip libpng-dev libonig-dev libxml2-dev libzip-dev
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd zip
+
+# Enable Apache rewrite
+RUN a2enmod rewrite
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Set working directory
-WORKDIR /var/www/html
+WORKDIR /var/www
 
 # Copy project files
 COPY . .
@@ -29,13 +23,19 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader
 
 # Laravel permissions
-RUN chmod -R 777 storage bootstrap/cache
+RUN chown -R www-data:www-data /var/www \
+    && chmod -R 775 storage bootstrap/cache
 
-# Copy nginx config
-COPY nginx.conf /etc/nginx/sites-available/default
+# Set Apache to serve Laravel public folder
+RUN sed -i 's!/var/www/html!/var/www/public!g' /etc/apache2/sites-available/000-default.conf
+
+# Clear cache (important)
+RUN php artisan config:clear \
+    && php artisan cache:clear \
+    && php artisan route:clear \
+    && php artisan view:clear
 
 # Expose port
-EXPOSE 10000
+EXPOSE 80
 
-# Start both services
-CMD service nginx start && php-fpm
+CMD ["apache2-foreground"]

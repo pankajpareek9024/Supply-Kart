@@ -43,7 +43,9 @@
                 <tbody>
                     @foreach($orders as $order)
                     <tr class="border-bottom">
-                        <td class="py-3 px-4 fw-bold text-dark">{{ $order->order_number }}</td>
+                        <td class="py-3 px-4 fw-bold">
+                            <a href="{{ route('orders.details', $order->id) }}" class="text-decoration-none text-primary-green">{{ $order->order_number }}</a>
+                        </td>
                         <td class="py-3 px-4 text-muted">{{ $order->created_at->format('d M, Y h:i A') }}</td>
                         <td class="py-3 px-4 fw-bolder text-success">₹{{ number_format($order->total_amount, 2) }}</td>
                         <td class="py-3 px-4">
